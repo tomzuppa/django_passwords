@@ -1,12 +1,36 @@
 {% extends 'base.html' %}
 
-
 {% block content %}
-
-
-
-<h1> Register </h1>
-
-
-
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <!-- Card Header -->
+                <div class="card-header bg-info text-white text-center">
+                    <h3>Create Your Account</h3>
+                    <h5>Secure your account today!</h5>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <form method="POST" class="formReg-layout" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Display form fields dynamically -->
+                        {{ RegisterForm.as_p }}
+                        
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary w-100">
+                                Register
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Card Footer -->
+                <div class="card-footer text-center">
+                    <p>Already have an account? <a href="{% url '' %}" class="text-info">Log In</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
