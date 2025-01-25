@@ -38,8 +38,42 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    
     'secureapp',
+
+    'crispy_forms',
+    'crispy_bootstrap5',
+
+    'django_recaptcha',
+
+    'django_otp',
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
+    'two_factor',
+
 ]
+
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+
+# Recaptcha keys
+
+RECAPTCHA_PUBLIC_KEY = '6LfWFb4qAAAAACfs430jUNpC3j2eTKAXf8ItRMVc'
+RECAPTCHA_PRIVATE_KEY = '6LfWFb4qAAAAAET6_ejgqkpgMK66a_74s4hYDrD9'
+
+# 2FA
+
+LOGIN_URL = 'two_factor:login'
+LOGIN_REDIRECT_URL = 'dashboard'
+
+
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://8000-cs-61983882132-default.cs-us-central1-pits.cloudshell.dev'
+]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -47,6 +81,10 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+
+      'django_otp.middleware.OTPMiddleware', #2FA
+
+
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -107,7 +145,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Mexico_City'
 
 USE_I18N = True
 

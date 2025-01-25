@@ -22,7 +22,7 @@ def register(request):
             form.save()
             
             # Redirect the user to another page after successful registration (placeholder for now)
-            return redirect('')  # Add the appropriate URL name or path here
+            return redirect('two_factor:login')  # Add the appropriate URL name or path here
 
     # Create a context dictionary to pass the form to the template
     context = {'RegisterForm': form}
