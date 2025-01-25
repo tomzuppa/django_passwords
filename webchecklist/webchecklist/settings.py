@@ -12,25 +12,22 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Base directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
+# Quick-start development settings - not suitable for production
+# Keep the secret key confidential in production environments
 SECRET_KEY = 'django-insecure-53ousp#tlm!v#ee-07njbaorx7jy(c-(q*m0b$cabn8&(-$q#u'
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# Debug mode: should be set to False in production
 DEBUG = True
 
+# Hosts allowed to access the application
 ALLOWED_HOSTS = []
 
-
-# Application definition
-
+# Installed apps include both built-in and third-party apps
 INSTALLED_APPS = [
+    # Default Django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,68 +35,61 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    
+    # Your custom app
     'secureapp',
 
+    # Third-party apps for forms and authentication
     'crispy_forms',
     'crispy_bootstrap5',
-
     'django_recaptcha',
-
     'django_otp',
-    'django_otp.plugins.otp_static',
-    'django_otp.plugins.otp_totp',
-    'two_factor',
-
+    'django_otp.plugins.otp_static',  # Static OTP tokens for 2FA
+    'django_otp.plugins.otp_totp',    # Time-based OTP tokens for 2FA
+    'two_factor',                     # Two-factor authentication
 ]
 
-
+# Crispy Forms configuration
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
-
-# Recaptcha keys
-
+# Google reCAPTCHA configuration
 RECAPTCHA_PUBLIC_KEY = '6LfWFb4qAAAAACfs430jUNpC3j2eTKAXf8ItRMVc'
 RECAPTCHA_PRIVATE_KEY = '6LfWFb4qAAAAAET6_ejgqkpgMK66a_74s4hYDrD9'
 
-# 2FA
+# Two-factor authentication login configuration
+LOGIN_URL = 'two_factor:login'  # Redirect users to 2FA login page
+LOGIN_REDIRECT_URL = 'dashboard'  # Redirect after successful login
 
-LOGIN_URL = 'two_factor:login'
-LOGIN_REDIRECT_URL = 'dashboard'
-
-
-
+# Trusted origins for CSRF protection
 CSRF_TRUSTED_ORIGINS = [
     'https://8000-cs-61983882132-default.cs-us-central1-pits.cloudshell.dev'
 ]
 
-
+# Middleware for handling requests and responses
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-
-      'django_otp.middleware.OTPMiddleware', #2FA
-
-
+    'django_otp.middleware.OTPMiddleware',  # Middleware for 2FA
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Root URL configuration
 ROOT_URLCONF = 'webchecklist.urls'
 
+# Template configuration for rendering HTML
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [],  # Add custom template directories here
+        'APP_DIRS': True,  # Look for templates inside app directories
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',
+                'django.template.context_processors.request',  # Required for Crispy Forms
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -107,23 +97,18 @@ TEMPLATES = [
     },
 ]
 
+# WSGI application for deploying the project
 WSGI_APPLICATION = 'webchecklist.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+# Database configuration using SQLite
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.sqlite3',  # SQLite as the database engine
+        'NAME': BASE_DIR / 'db.sqlite3',  # Database file location
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
+# Password validation settings for security
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -139,27 +124,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'America/Mexico_City'
-
-USE_I18N = True
-
-USE_TZ = True
-
+# Localization settings
+LANGUAGE_CODE = 'en-us'  # Language code for the application
+TIME_ZONE = 'America/Mexico_City'  # Time zone for Mexico City
+USE_I18N = True  # Enable internationalization
+USE_TZ = True  # Use timezone-aware datetimes
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']  # Path to static files
 
-STATICFILES_DIRS = [BASE_DIR / 'static']
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
+# Default auto field for models
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
