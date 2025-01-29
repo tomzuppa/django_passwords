@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import CreateUserForm  # Import the custom user creation form
-from django.contrib.auths.models import auth # Importing the auth module from django.contrib.auths.models, which provides authentication functionality.
+from django.contrib.auth.models import auth # Importing the auth module from django.contrib.auths.models, which provides authentication functionality.
 from django.contrib.auth.decorators import login_required # Importing the login_required decorator from django.contrib.auth.decorators, which ensures that a user is authenticated before accessing a view.
 
 # Home page view function
