@@ -83,3 +83,50 @@ body {
     color: #0056b3; /* Darker blue on hover */
 }
 
+/* DASHBOARD BUTTONS */
+.custom-btn {
+    width: 200px;
+    height: 40px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 5px;
+    color: white; /* Default text color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 10px; /* Adjust padding */
+    line-height: 1.2; /* Ensure proper text alignment */
+    font-size: 14px; /* Adjust font size if needed */
+}
+
+.logout-btn {
+    background-color: #d9534f !important; /* Red */
+    border: 1px solid #d9534f !important;
+}
+
+.setup-btn {
+    background-color: #f0ad4e !important; /* Orange */
+    border: 1px solid #f0ad4e !important;
+}
+
+.profile-btn {
+    background-color: #f7e34d !important; /* Yellow */
+    border: 1px solid #f7e34d !important;
+    color: black !important;
+}
+
+/* Hover Effects */
+.logout-btn:hover {
+    background-color: #c9302c !important;
+    border-color: #c12e2a !important;
+}
+
+.setup-btn:hover {
+    background-color: #ec971f !important;
+    border-color: #d58512 !important;
+}
+
+.profile-btn:hover {
+    background-color: #e6d645 !important;
+    border-color: #d6c742 !important;
+}

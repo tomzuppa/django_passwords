@@ -1,103 +1,73 @@
+{% extends 'base.html' %}  <!-- Extends base.html to inherit common layout -->
 
-{% extends 'base.html' %}
+{% block content %}  <!-- Starts the content block -->
 
-{% block content %}
-
+    <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white justify-content-center">
-
-
-        <a class="navbar-brand main-heading" href="{% url 'home' %}"> 
-                
-        &nbsp; SecureX 
         
+        <!-- Brand Name / Logo -->
+        <a class="navbar-brand main-heading" href="{% url 'home' %}"> 
+            &nbsp; SecureX  <!-- Brand name with spacing -->
         </a>
 
+        <!-- Mobile Navigation Toggle Button -->
         <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarNavDropdown"
-        aria-controls="navbarNavDropdown"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-    >
-        <span class="navbar-toggler-icon"></span>
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>  <!-- Bootstrap hamburger icon for mobile menu -->
+        </button>
 
-    </button>
-
-
+        <!-- Navbar Links (Register & Login) -->
         <div class="collapse navbar-collapse text-center" id="navbarNavDropdown">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="btn btn-alert navbar-btn" type="button" href="{% url 'register' %}">Register</a>
+                    <!-- Register button -->
+                </li>
 
-        
-        <ul class="navbar-nav ms-auto">
-
-
-           
-
-
-            <li class="nav-item">
-        
-            <a class="btn btn-alert navbar-btn" type="button"  href="{% url 'register' %}">Register</a>
-
-            </li>
-
-
-            
-
-            <li class="nav-item">
-
-            <a class="btn btn-alert navbar-btn" type="button"  href="{% url 'two_factor:login' %}">Login</a>
-
-            </li>
-
-
-            
-
-        </ul>
-        
-        
+                <li class="nav-item">
+                    <a class="btn btn-alert navbar-btn" type="button" href="{% url 'two_factor:login' %}">Login</a>
+                    <!-- Login button -->
+                </li>
+            </ul>
         </div>
 
-
-    </nav>
-
-
+    </nav>  <!-- End of Navigation Bar -->
 
     <body>
-
-      
+        <br>  <!-- Line breaks for spacing -->
         <br>
 
-        <br>
-
+        <!-- Centered Content -->
         <div class="text-center">
-
-            {% comment %} ICON LOCK {% endcomment %}
-        
+            
+            {% comment %} ICON LOCK - Displays a security lock icon {% endcomment %}
             <i class="fa fa-lock fa-4x text-dark" aria-hidden="true"></i>
 
+            <br>
+            <br>
 
-        <br>
-        <br>
-
-        <h3> SecureX .... The most secure website out there! </h3>
+            <h3>SecureX .... The most secure website out there!</h3>  <!-- Site tagline -->
 
             <br>
 
-            <p> Ensure that your Django web application is secure in all areas. </p>
+            <p>Ensure that your Django web application is secure in all areas.</p>  <!-- Description text -->
 
             <br>
-            
-        
-            <a class="btn btn-info" type="button"  href="{% url 'register' %}"> <i class="fa fa-user" aria-hidden="true"></i> &nbsp; Make an account </a>
 
-        
+            <!-- Button to Register a New Account -->
+            <a class="btn btn-info" type="button" href="{% url 'register' %}"> 
+                <i class="fa fa-user" aria-hidden="true"></i> &nbsp; Make an account 
+            </a>
+
         </div>
-
-      
-
 
     </body>
 
-
-{% endblock %}
+{% endblock %}  <!-- Ends the content block -->

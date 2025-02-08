@@ -1,12 +1,40 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %}  <!-- Extends the base template (base.html) to inherit common structure -->
 
+{% block content %}  <!-- Begins the content block that will be inserted into base.html -->
+<div class="container mt-4">  <!-- Creates a Bootstrap container with top margin -->
 
-{% block content %}
+    <!-- WELCOME MESSAGE + LOGOUT BUTTON -->
+    <div class="card p-4 mb-4 text-center">
+        <h5 class="fw-bold">Welcome, {{ user.first_name|default:user.username }}!</h5>
+        <!-- Displays the logged-in user's first name; if not available, shows their username -->
+        
+        <p>SecureX is the most secure website in the world!</p>  <!-- Description text -->
 
+        <!-- Logout Button Form -->
+        <div class="text-center mt-3 d-flex flex-column align-items-center">
+            <form method="post" action="{% url 'logout' %}">  <!-- Sends a POST request to logout the user -->
+                {% csrf_token %}  <!-- Protects against Cross-Site Request Forgery (CSRF) attacks -->
+                <button type="submit" class="btn custom-btn logout-btn">LOGOUT</button>  <!-- Logout button -->
+            </form>
+        </div>
+    </div>
 
+    <!-- 2FA (Two-Factor Authentication) Section -->
+    <div class="card p-4 text-center">
+        <h5 class="fw-bold">2FA</h5>  <!-- Section title -->
+        <p>Two-factor authentication provides users with extra security</p>  <!-- Short description -->
+        <hr>  <!-- Horizontal separator -->
 
-<h1> Dashboard </h1>
+        <!-- 2FA Buttons -->
+        <div class="d-flex flex-column align-items-center">
+            <a class="btn custom-btn setup-btn" href="{% url 'two_factor:setup' %}">ENABLE 2FA</a>
+            <!-- Button to enable Two-Factor Authentication -->
 
+            <a class="btn custom-btn profile-btn mt-2" href="{% url 'two_factor:profile' %}">2FA ACCOUNT SETTINGS</a>
+            <!-- Button to access the user's 2FA profile/settings -->
+        </div>
+    </div>
 
+</div>
+{% endblock %}  <!-- Ends the content block -->
 
-{% endblock %}

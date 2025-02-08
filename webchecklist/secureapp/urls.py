@@ -1,5 +1,6 @@
 from django.urls import path
-from . import views  # Import views from the same directory (the dot means "current directory")
+from . import views
+from django.contrib.auth import views as auth_views  # Import Django's built-in auth views
 
 # Define URL patterns for the application
 urlpatterns = [
@@ -20,7 +21,7 @@ urlpatterns = [
 
 
     # URL pattern for user logout. 
-    # This maps the 'user-logout' URL to the user_logout view function.
-    path('user-logout', views.user_logout, name='user-logout'),
+        # Logout (Using Django's built-in LogoutView)
+    path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
 
 ]
