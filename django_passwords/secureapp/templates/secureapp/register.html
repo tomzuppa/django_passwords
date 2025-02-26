@@ -1,0 +1,48 @@
+{% extends 'secureapp/base.html' %}  <!-- Extends base.html to inherit the common layout -->
+
+{% block content %}  <!-- Starts the content block -->
+<div class="container mt-5">  <!-- Creates a Bootstrap container with a top margin of 5 -->
+    
+    <div class="row justify-content-center">  <!-- Centers the form horizontally -->
+        <div class="col-md-6">  <!-- Defines a medium-sized column (takes 6 out of 12 grid spaces) -->
+
+            <div class="card shadow-lg">  <!-- Creates a card with a shadow effect -->
+                
+                <!-- Card Header -->
+                <div class="card-header bg-info text-white text-center">
+                    <h3>Create Your Account</h3>  <!-- Title of the registration form -->
+                    <h5>Secure your account today!</h5>  <!-- Subtitle for encouragement -->
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body">
+                    <form method="POST" class="formReg-layout" novalidate>  <!-- Registration form (POST request) -->
+                        {% csrf_token %}  <!-- CSRF protection token to prevent attacks -->
+                        
+                        <!-- Displays Django's registration form dynamically -->
+                        {{ RegisterForm.as_p }}  <!-- Renders form fields with automatic <p> tags for layout -->
+                        
+                        <!-- Submit Button -->
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary w-100">
+                                Register
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Card Footer -->
+                <div class="card-footer text-center">
+                    <p>Already have an account? 
+                        <a href="{% url 'home' %}" class="text-info">Log In</a> 
+                        <!-- Link to the login page -->
+                    </p>
+                </div>
+
+            </div>  <!-- End of Card -->
+
+        </div>  <!-- End of Column -->
+    </div>  <!-- End of Row -->
+
+</div>  <!-- End of Container -->
+{% endblock %}  <!-- Ends the content block -->
