@@ -1,0 +1,18 @@
+{% extends "secureapp/base.html" %}
+
+{% block title %}Account Locked{% endblock %}
+
+{% block content %}
+<div class="account-locked-body">
+    <div class="account-locked-container">
+
+        <h1>🔒 Account Locked</h1>
+        <p>Due to multiple unsuccessful login attempts, your account has been temporarily locked for security reasons.</p>
+        <p>Please try again later or contact support for assistance.</p>
+
+        <a href="{% url 'home' %}" class="btn btn-danger">Return to Login</a>
+        <a href="{% url 'home' %}" class="btn btn-info">Contact Support</a>
+
+    </div>
+</div>
+{% endblock %}

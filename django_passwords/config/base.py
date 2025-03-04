@@ -18,11 +18,11 @@ import os  # Standard library for interacting with the operating system
 # Load environment variables from .env file
 load_dotenv()
 
-# 1️⃣ BASE DIRECTORY (PROJECT ROOT)
+#  BASE DIRECTORY (PROJECT ROOT)
 # Defines the absolute path to the project's root directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# 2️⃣ SECURITY SETTINGS
+#  SECURITY SETTINGS
 
 # SECRET_KEY: Critical for cryptographic signing, should be kept secret in production
 SECRET_KEY = os.getenv('SECRET_KEY', 'change-this-default-key-for-production')
@@ -34,7 +34,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'  # Converts string 'True' to boole
 # Example: 'yourwebsite.com,www.yourwebsite.com' → ['yourwebsite.com', 'www.yourwebsite.com']
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
-# 3️⃣ INSTALLED APPLICATIONS
+#  INSTALLED APPLICATIONS
 
 INSTALLED_APPS = [
     # Default Django apps required for core functionalities
@@ -56,9 +56,11 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_static',  # Static OTP support for 2FA
     'django_otp.plugins.otp_totp',  # Time-based OTP support (like Google Authenticator)
     'two_factor',  # Two-Factor Authentication framework
+
+    'axes' #Axes to avoid force brute attacks
 ]
 
-# 4️⃣ FORMS & AUTHENTICATION
+#  FORMS & AUTHENTICATION
 
 # Crispy Forms settings for Bootstrap 5
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
@@ -72,10 +74,13 @@ RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY', '')
 LOGIN_URL = 'two_factor:login'  # Redirect users to 2FA login page
 LOGIN_REDIRECT_URL = 'dashboard'  # Redirect users after successful login
 
-# 5️⃣ SECURITY SETTINGS
+#  SECURITY SETTINGS
 
-# CSRF Protection: Defines trusted domains for Cross-Site Request Forgery protection
+# Read the CSRF_TRUSTED_ORIGINS environment variable correctly
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
+
+# Remove empty values in case of trailing commas
+CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in CSRF_TRUSTED_ORIGINS if origin.strip()]
 
 # Additional security settings for Django
 CSRF_COOKIE_SECURE = True  # Ensures CSRF cookies are sent over HTTPS
@@ -87,8 +92,16 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Applies HSTS to all subdomains
 SECURE_HSTS_PRELOAD = True  # Preloads HSTS into browsers for additional security
 SECURE_SSL_REDIRECT = True  # Redirects all HTTP requests to HTTPS
 
-# 6️⃣ MIDDLEWARE CONFIGURATION
+#  MIDDLEWARE CONFIGURATION
 # Middleware are functions that process requests before they reach the views
+
+AUTHENTICATION_BACKENDS = [
+    # AxesStandaloneBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
+    'axes.backends.AxesStandaloneBackend',
+
+    # Django ModelBackend is the default authentication backend.
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',  # Provides security enhancements
@@ -100,9 +113,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',  # Manages flash messages
     'django.middleware.clickjacking.XFrameOptionsMiddleware',  # Prevents clickjacking
     'django_auto_logout.middleware.auto_logout',  # Enables automatic logout for inactivity
+
+    # AxesMiddleware should be the last middleware in the MIDDLEWARE list.
+    # It only formats user lockout messages and renders Axes lockout responses
+    # on failed user authentication attempts from login views.
+    # If you do not want Axes to override the authentication response
+    # you can skip installing the middleware and use your own views.
+    'axes.middleware.AxesMiddleware',
 ]
 
-# 7️⃣ URL & TEMPLATE CONFIGURATION
+#  URL & TEMPLATE CONFIGURATION
 
 ROOT_URLCONF = 'project_root.urls'  # Defines the root URL configuration
 
@@ -124,10 +144,10 @@ TEMPLATES = [
     },
 ]
 
-# 8️⃣ WSGI APPLICATION (For running the project with a WSGI server)
+#  WSGI APPLICATION (For running the project with a WSGI server)
 WSGI_APPLICATION = 'project_root.wsgi.application'
 
-# 9️⃣ DATABASE CONFIGURATION (Uses environment variables for security)
+#  DATABASE CONFIGURATION (Uses environment variables for security)
 DATABASES = {
     'default': {
         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.sqlite3'),
@@ -139,7 +159,7 @@ DATABASES = {
     }
 }
 
-# 🔟 PASSWORD VALIDATION
+#  PASSWORD VALIDATION
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -148,21 +168,49 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# 🔟.1 LOCALIZATION SETTINGS
+# .1 LOCALIZATION SETTINGS
 
 LANGUAGE_CODE = 'en-us'  # Default language for the app
 TIME_ZONE = 'America/Mexico_City'  # Time zone setting
 USE_I18N = True  # Enables internationalization
 USE_TZ = True  # Enables timezone support
 
-# 🔟.2 STATIC & MEDIA FILES
+# .2 STATIC & MEDIA FILES
 
 STATIC_URL = '/static/'  # URL path for static files
 STATICFILES_DIRS = [BASE_DIR / 'static']  # Location where static files are stored
 
-# 🔟.3 AUTO LOGOUT SETTINGS
+# .3 AUTO LOGOUT SETTINGS
 # Automatically logs out users after a period of inactivity
 AUTO_LOGOUT = {
     'IDLE_TIME': timedelta(minutes=int(os.getenv('AUTO_LOGOUT_MINUTES', 5))),  # Default: 5 min
     'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
 }
+# AXES CONFIGURATION (TO AVOID BRUTE FORCE ATTACKS)---------------------------------------------------------------
+AXES_ENABLED = True  
+
+# 🔒 Security limits
+AXES_FAILURE_LIMIT = 3  # Maximum login attempts before locking the user
+AXES_COOLOFF_TIME = timedelta(hours=2)  # Cooldown before the user can try again
+
+#  Reset failed attempts after a successful login
+AXES_RESET_ON_SUCCESS = True  
+
+#  Custom lockout page
+AXES_LOCKOUT_TEMPLATE = 'secureapp/account-locked.html'  
+
+#  Ensure only the specific username is locked (not the entire IP)
+AXES_LOCKOUT_PARAMETERS = ['username']
+
+#-....---------------------------------------------------------------------------------------------
+
+#-------------E MAIL CONFIGURATION (RESET PASSWORD)------------
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))  # Convert to integer
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'  # Convert to boolean
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+#---------------------------------------------------------------

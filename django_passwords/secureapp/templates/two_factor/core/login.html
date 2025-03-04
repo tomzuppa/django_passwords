@@ -49,8 +49,12 @@
 
     {% include "two_factor/_wizard_actions.html" %}
 
-
-
+    <!-- Password Reset Link Added Here -->
+    <p>
+    <p class="forgot-password">
+      <a href="{% url 'password_reset' %}">Forgot your password?</a>
+  </p>
+    {% comment %} --------------------- {% endcomment %}
   </form>
 
   {% block 'backup_tokens' %}

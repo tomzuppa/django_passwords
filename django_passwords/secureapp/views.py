@@ -34,5 +34,10 @@ def dashboard(request):
     Displays the user dashboard.
     Only accessible to authenticated users.
     """
-    print(f"Usuario autenticado: {request.user}")
     return render(request, 'secureapp/dashboard.html')  # Render the dashboard page
+
+def accountLocked(request):
+    """
+    Displays the account-locked warning page
+    """
+    return render(request, 'secureapp/account-locked.html')  # Render the dashboard page

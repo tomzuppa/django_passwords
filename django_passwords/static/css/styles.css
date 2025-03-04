@@ -22,6 +22,7 @@ body {
 
 /* Input field styles */
 .formReg-layout input, .formReg-layout select, .formReg-layout textarea {
+    display: block;
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
@@ -129,4 +130,72 @@ body {
 .profile-btn:hover {
     background-color: #e6d645 !important;
     border-color: #d6c742 !important;
+}
+
+/* ===================================================== */
+/*                 ACCOUNT LOCKED PAGE                   */
+/* ===================================================== */
+
+/* Center the locked message on the screen */
+.account-locked-container {
+    max-width: 450px;
+    margin: 100px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2); /* Soft shadow */
+    text-align: center;
+}
+
+/* Background for lock effect */
+.account-locked-body {
+    background-color: #f8d7da; /* Light red to indicate warning */
+    height: 100vh; /* Full height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Locked icon styling */
+.account-locked-container h1 {
+    font-size: 28px;
+    color: #721c24; /* Dark red for emphasis */
+    margin-bottom: 15px;
+}
+
+/* Message styling */
+.account-locked-container p {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Buttons styling */
+.account-locked-container .btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    margin-top: 10px;
+}
+
+/* Danger Button */
+.account-locked-container .btn-danger {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+.account-locked-container .btn-danger:hover {
+    background-color: #a71d2a;
+}
+
+/* Info Button */
+.account-locked-container .btn-info {
+    background-color: #17a2b8;
+    border-color: #138496;
+}
+
+.account-locked-container .btn-info:hover {
+    background-color: #117a8b;
 }
