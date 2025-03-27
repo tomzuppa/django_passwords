@@ -1,34 +1,39 @@
-# Django and core dependencies
-Django==5.1.4
-django-auto-logout==0.5.1
-django-crispy-forms==2.3
+# Django core
+Django==5.1.5
 django-environ==0.12.0
-django-formtools==2.5.1
-django-otp==1.5.4
-django-phonenumber-field==8.0.0
-django-recaptcha==4.0.0
-django-two-factor-auth==1.17.0
-sqlparse==0.5.3
-
-# Authentication and Security
-cryptography==44.0.0
-python-dotenv==1.0.1
-qrcode==7.4.2
-phonenumbers==8.13.53
-
-# Crispy Forms (Bootstrap support)
+django-crispy-forms==2.3
 crispy-bootstrap5==2024.10
-
-# Database (for PostgreSQL, remove if using SQLite)
+django-extensions==3.2.3
+django-formtools==2.5.1
+django-auto-logout==0.5.1
+django-axes==7.0.2
+django-otp==1.5.4
+django-two-factor-auth==1.17.0
+django-recaptcha==4.0.0
+django-phonenumber-field==8.0.0
+phonenumbers==8.13.53
+python-dotenv==1.0.1
 psycopg2-binary==2.9.10
+qrcode==7.4.2
 
-# Utility libraries
-requests==2.32.3
-pytz==2025.1
-urllib3==2.3.0
+# Machine Learning / Deep Learning
+numpy==2.0.2
+pandas==2.2.1
+scikit-learn==1.5.0
+matplotlib==3.8.3
+seaborn==0.13.2
+scipy==1.13.1
+tensorflow==2.18.0
+keras==3.8.0
+xgboost==2.0.3
+lightgbm==4.3.0
+optuna==3.5.0
 
-# Optional linting & formatting (for development only)
-flake8==3.8.4
-isort==5.13.2
-autopep8==1.5.5
-black==23.7.0
+# Herramientas adicionales
+joblib==1.4.2
+statsmodels==0.14.1
+pydantic==2.10.5
+
+# Integración con JS / Frontend moderno (API, WebSockets, etc.)
+djangorestframework==3.15.1
+channels==4.1.0

@@ -28,7 +28,16 @@
 
     </style>
 
-    <!-- Messages -->
+    {% comment %} Messages {% endcomment %}
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
   <br>
 
@@ -49,6 +58,6 @@
   </body>
 
 
-  <script src="{% static 'js/app.js' %}"></script>
+  <script src="{% static 'js/scripts.js' %}"></script>
 
 </html>

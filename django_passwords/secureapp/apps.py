@@ -1,13 +1,15 @@
-from django.apps import AppConfig  # Import the base AppConfig class from Django
+from django.apps import AppConfig
 
-class SecureappConfig(AppConfig):  # Defines the configuration for the "secureapp" application
+
+class SecureAppConfig(AppConfig):
     """
     Configuration class for the SecureApp Django application.
-    This class defines settings specific to the application.
+    This class ensures that signals are imported when the app is ready.
     """
 
-    default_auto_field = 'django.db.models.BigAutoField'  
-    # Specifies the default type of primary key for models in this app (BigAutoField is optimized for large datasets)
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "secureapp"
 
-    name = 'secureapp'  
-    # Defines the application name as 'secureapp' (must match the folder name of the app)
+    def ready(self):
+        """Ensures signals are imported after app initialization."""
+        import secureapp.signals  # ✅ Ensure signals are loaded correctly

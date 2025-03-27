@@ -1,73 +1,103 @@
-# Import the default UserCreationForm provided by Django
-# This form includes fields for creating a new user with password validation
-from django.contrib.auth.forms import UserCreationForm
+"""
+Forms for SecureApp: Handles user creation and custom password reset functionalities.
+"""
 
-# Import the 'forms' module from Django. This module is used for creating and handling forms.
-from django import forms
-# Import the 'PasswordResetForm' class from Django's authentication forms. This form is used to handle the password reset process.
-from django.contrib.auth.forms import PasswordResetForm
-# Import the 'User' model from Django's authentication models. This model is used to represent users in the system.
-from django.contrib.auth.models import User
+# --------------------------------------------------------
+# 🔹 IMPORTS
+# --------------------------------------------------------
+from django import forms  # Main forms module from Django
+from django.conf import settings
+from django.contrib.auth.forms import PasswordResetForm, UserCreationForm
+from django.contrib.auth.models import \
+    User  # Default User model for authentication
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 
 
-# Import the default User model provided by Django
-# The User model handles authentication and stores user data (e.g., username, email, password)
-from django.contrib.auth.models import User
-
-# Custom user creation form extending the default UserCreationForm
+# --------------------------------------------------------
+# 🔹 CREATE USER FORM
+# --------------------------------------------------------
 class CreateUserForm(UserCreationForm):
     """
-    A custom user creation form that extends Django's built-in UserCreationForm.
-    This form allows creating new users with the specified fields: username, email, password1, and password2.
+    Custom user creation form that extends Django's built-in UserCreationForm.
+    This form includes fields for username, email, password1, and password2.
     """
+
     class Meta:
-        # Specifies the model the form will use (Django's built-in User model)
+        # Specify that we are working with Django's built-in User model
         model = User
 
-        # Fields to include in the form
-        # 'password1' and 'password2' are for password creation and confirmation
-        fields = ['username', 'email', 'password1', 'password2']
+        # Fields to display in the form for user creation and password confirmation
+        fields = ["username", "email", "password1", "password2"]
 
 
-
-#---- RESET PASSWORD ------------------
+# --------------------------------------------------------
+# 🔹 CUSTOM PASSWORD RESET FORM
+# --------------------------------------------------------
+# --------------------------------------------------------
+# 🔹 CUSTOM PASSWORD RESET FORM
+# --------------------------------------------------------
 class CustomPasswordResetForm(PasswordResetForm):
     """
-    Custom Password Reset Form that checks if the email exists.
-    This form extends Django's built-in PasswordResetForm to provide custom validation.
+    Custom Password Reset Form that checks if the email exists
+    and manually sends an email with dynamic timeout context.
     """
-    email = forms.EmailField(label="Email", max_length=254)
-    # Define the email field, which is required for password reset.
-    # `label="Email"` sets the label of the field in the rendered form.
-    # `max_length=254` sets the maximum allowed length for the email address.
 
-    def clean_email(self):
-        """
-        Validate that the entered email exists in the system.
-        If not, still return success message for security reasons.
-        This method overrides the default email validation to add a custom check.
-        """
-        email = self.cleaned_data.get("email")
-        # Retrieve the email address from the form's cleaned data.
-        # `cleaned_data` is a dictionary of the validated and cleaned form data.
+    def save(
+        self,
+        domain_override=None,
+        subject_template_name="registration/password_reset_subject.txt",
+        email_template_name="registration/password_reset_email.html",
+        use_https=False,
+        token_generator=default_token_generator,
+        request=None,
+        *args,
+        **kwargs,
+    ):
 
-        users = User.objects.filter(email=email)
-        # Query the User model to check if any user exists with the provided email.
-        # `User.objects.filter(email=email)` performs a lookup in the database.
+        # Get the current site domain
+        current_site = get_current_site(request)
 
-        if not users.exists():
-            # Check if the query returned any results (i.e., if a user with that email exists).
-            # If `users.exists()` returns False, it means no user with that email was found.
+        # Extract the email from the form input
+        email = self.cleaned_data["email"]
 
-            # We won't raise an error, just proceed as normal to avoid exposing user emails
-            # This is a security measure to prevent attackers from enumerating valid user email addresses.
-            return email  # Still return the input value to avoid form errors
-            # Even if no user was found, we return the email address without raising an error.
-            # This prevents the form from showing an error message and potentially revealing
-            # whether an email is registered or not.
+        # Fetch the user associated with this email (if exists)
+        user = User.objects.filter(email=email).first()
 
-        return email
-        # If a user with the provided email was found, return the email address.
-        # This indicates that the email is valid.
+        if user:
+            # Dynamically fetch timeout value in hours from settings
+            timeout_seconds = settings.PASSWORD_RESET_TIMEOUT
+            timeout_hours = timeout_seconds // 3600  # Convert seconds to hours
 
-#-------------------------------------------
+            # Construct the email context
+            context = {
+                "email": email,
+                "domain": domain_override or current_site.domain,
+                "site_name": current_site.name,
+                "protocol": "https" if request.is_secure() else "http",
+                "uid": urlsafe_base64_encode(force_bytes(user.pk)),  # Encode user ID
+                "user": user,
+                "token": token_generator.make_token(
+                    user
+                ),  # Generate secure reset token
+                "timeout_hours": int(timeout_hours),
+            }
+
+            # Render email templates
+            subject = render_to_string(subject_template_name, context).strip()
+            email_body = render_to_string(email_template_name, context)
+
+            # Construct sender details
+            sender_name = settings.EMAIL_SENDER_NAME
+            sender_email = settings.DEFAULT_FROM_EMAIL
+            full_sender = f"{sender_name} <{sender_email}>"
+
+            # Create and send the email
+            email_message = EmailMultiAlternatives(
+                subject, email_body, full_sender, [email]
+            )
+            email_message.send()
